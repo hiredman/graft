@@ -1,10 +1,11 @@
 # graft
 
-FIXME: write description
+Graft lets you specify a `root` (e.g. 'foo.bar) an returns a function that will try to map URI's from a request map (see the ring SPEC) to vars and call the function held by that var.
 
 ## Usage
 
-FIXME: write
+(ring/run-jetty (graft 'foo.bar) {:port 8080})
+;; functions in the foo.bar namespace will be exposed as urls
 
 ## Installation
 
@@ -12,4 +13,4 @@ FIXME: write
 
 ## License
 
-FIXME: write
+Copyright (c) 2010 Kevin Downey and released under an MIT license.
