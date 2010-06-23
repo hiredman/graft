@@ -1,5 +1,7 @@
 # graft
 
+Graft: because your REST end points are functions and already have names
+
 Graft lets you specify a `root` (e.g. 'foo.bar) an returns a function that will try to map URI's from a request map (see the ring SPEC) to vars and call the function held by that var.
 
 ## Usage
