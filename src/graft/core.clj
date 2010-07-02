@@ -6,10 +6,12 @@
                 ["" "ROOT"]
                 (.split uri "/"))
         sym (symbol (last parts))
-        ns (create-ns
-            (symbol
-             (string/butlast 1 (string/join "." (conj (butlast parts) (name root))))))]
-    (if-let [v (ns-resolve ns sym)] v (ns-resolve (create-ns root) 'four-oh-four))))
+        ns (symbol
+             (string/butlast
+              1 (string/join "." (conj (butlast parts) (name root)))))]
+    (if-let [v (ns-resolve ns sym)]
+      v
+      (ns-resolve root 'four-oh-four))))
 
 (defn graft [root]
   (fn [{:keys [uri] :as req}]
@@ -18,5 +20,5 @@
            fn (deref var)]
        (fn req))
      (catch Exception e
-       ((deref (ns-resolve (create-ns root) 'five-hundred))
+       ((deref (ns-resolve root 'five-hundred))
         (assoc req ::exception e))))))
