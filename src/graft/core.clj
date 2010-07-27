@@ -1,24 +1,21 @@
 (ns graft.core
   (:require [clojure.contrib.string :as string]))
 
-(defn uri->var [root uri]
+(defn uri->symbol [root uri]
   (let [parts (if (= "/" uri)
                 ["" "ROOT"]
-                (.split uri "/"))
-        sym (symbol (last parts))
-        ns (symbol
-             (string/butlast
-              1 (string/join "." (conj (butlast parts) (name root)))))]
-    (if-let [v (ns-resolve ns sym)]
-      v
-      (ns-resolve root 'four-oh-four))))
+                (.split uri "/"))]
+    (symbol
+     (string/butlast
+      1 (string/join "." (conj (butlast parts) (name root))))
+     (.replaceAll (last parts) "\\." "_"))))
 
 (defn graft [root]
   (fn [{:keys [uri] :as req}]
     (try
-     (let [var (uri->var root uri)
-           fn (deref var)]
-       (fn req))
-     (catch Exception e
-       ((deref (ns-resolve root 'five-hundred))
-        (assoc req ::exception e))))))
+      (let [var (or (ns-resolve root (uri->symbol root uri)) (ns-resolve root 'four-oh-four))
+            fn (deref var)]
+        (fn req))
+      (catch Exception e
+        ((deref (ns-resolve root 'five-hundred))
+         (assoc req ::exception e))))))
