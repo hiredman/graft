@@ -11,10 +11,13 @@
 
 (defn graft [root]
   (fn [{:keys [uri] :as req}]
-    (try
-      (let [var (or (ns-resolve root (uri->symbol root uri)) (ns-resolve root 'four-oh-four))
-            fn (deref var)]
-        (fn req))
-      (catch Exception e
-        ((deref (ns-resolve root 'five-hundred))
-         (assoc req ::exception e))))))
+    (let [handle-req (or (ns-resolve root (uri->symbol root uri))
+                         (ns-resolve root 'four-oh-four)
+                         (constantly nil))
+          handle-ex (ns-resolve root 'five-hundred)]
+      (if handle-ex
+        (try
+          (handle-req req)
+          (catch Exception e
+            (handle-ex (assoc req ::exception e))))
+        (handle-req req)))))
