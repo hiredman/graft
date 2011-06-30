@@ -1,5 +1,5 @@
 (ns graft.core
-  (:require [clojure.contrib.string :as string]))
+  (:require [clojure.string :as string]))
 
 (defn uri->symbol [root uri]
   (let [parts (if (= "/" uri)
