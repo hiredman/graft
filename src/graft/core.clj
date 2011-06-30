@@ -3,8 +3,8 @@
 
 (defn uri->symbol [root uri]
   (let [parts (if (= "/" uri)
-                ["" "ROOT"]
-                (.split uri "/"))]
+                ["ROOT"]
+                (remove empty? (.split uri "/")))]
     (symbol
      (string/butlast
       1 (string/join "." (conj (butlast parts) (name root))))
