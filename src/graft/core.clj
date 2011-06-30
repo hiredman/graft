@@ -6,8 +6,7 @@
                 ["ROOT"]
                 (remove empty? (.split uri "/")))]
     (symbol
-     (string/butlast
-      1 (string/join "." (conj (butlast parts) (name root))))
+     (string/join "." (cons (name root) (butlast parts)))
      (.replaceAll (last parts) "\\." "_"))))
 
 (defn graft [root]
